@@ -1,8 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
 interface AuthenticationContextInterface {
     authenticated: boolean;
     setAuthenticated: (value: boolean) => void;
@@ -20,7 +17,7 @@ export function useAuthenticationContext() {
 
 export function AtuhenticationProvider({ children }: { children: React.ReactNode }) {
     const [authenticated, setAuthenticated] = useState<boolean>(false);
-    const [sessionCookie, setSessionCookie] = useState<string | undefined>(undefined);
+    const [_, setSessionCookie] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         const sessionCookie = Cookies.get("session");
