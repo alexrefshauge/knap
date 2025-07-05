@@ -45,6 +45,8 @@ func main() {
 	ctx := handlers.NewContext(dbPath)
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("GET /api/health", ctx.HandleHealth())
+
 	mux.HandleFunc("POST /api/user/auth", ctx.HandleAuthenticate())
 	mux.HandleFunc("POST /api/user/new", ctx.HandleNewUser())
 
