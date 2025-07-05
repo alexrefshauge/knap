@@ -1,0 +1,22 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  margin: 0;
+  padding: 0;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --c-red:rgb(236, 65, 42);
+  --c-red-dark:rgb(163, 40, 50);
+  --c-grey:rgb(128, 128, 128);
+  --c-grey-dark:rgb(64, 64, 64);
+
+  --c-background:rgb(247, 240, 224);
+  --c-background-shadow: rgb(219, 209, 204);
+  --c-border:rgb(39, 30, 23);
+}

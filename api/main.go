@@ -1,0 +1,55 @@
+package main
+
+import (
+	"fmt"
+	"github.com/alexrefshauge/knap/handlers"
+	"github.com/rs/cors"
+	"net/http"
+	"os"
+	"strconv"
+)
+
+var (
+	port        int
+	environment string
+	dbPath      string
+)
+
+func main() {
+	var err error
+	if len(os.Args) < 3 {
+		panic("not enough arguments")
+	}
+
+	port, err = strconv.Atoi(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+
+	dbPath = os.Args[2]
+	environment = os.Args[3]
+	var origins []string
+
+	switch environment {
+	case "dev":
+		origins = []string{"http://localhost:5173"}
+	case "prod":
+		origins = []string{"*"} //TODO: set correct origin
+	}
+
+	corsMiddleware := cors.New(cors.Options{
+		AllowedOrigins:   origins,
+		AllowedMethods:   []string{"GET", "POST", "PUT"},
+		AllowCredentials: true,
+	})
+	ctx := handlers.NewContext(dbPath)
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("POST /api/user/auth", ctx.HandleAuthenticate())
+	mux.HandleFunc("POST /api/user/new", ctx.HandleNewUser())
+
+	err = http.ListenAndServe(fmt.Sprintf(":%d", port), corsMiddleware.Handler(mux))
+	if err != nil {
+		panic(err)
+	}
+}
