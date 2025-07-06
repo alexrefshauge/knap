@@ -34,12 +34,20 @@ func main() {
 
 	switch environment {
 	case "dev":
-		origins = []string{"http://localhost:5173", "http://192.168.0.134:5173"}
+		origins = []string{"http://localhost:5173"}
 	case "prod":
-		origins = []string{"*"} //TODO: set correct origin
+		origins = []string{"drknap.org"}
+	}
+
+	var allowFunc func(string) bool
+	if environment == "dev" {
+		allowFunc = func(path string) bool {
+			return true
+		}
 	}
 
 	corsMiddleware := cors.New(cors.Options{
+		AllowOriginFunc:  allowFunc,
 		AllowedOrigins:   origins,
 		AllowedMethods:   []string{"GET", "POST", "PUT"},
 		AllowCredentials: true,
