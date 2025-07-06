@@ -25,8 +25,9 @@ func (ctx *Context) HandleHealth() http.HandlerFunc {
 		_, err = w.Write(responseData)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
 	}
 }

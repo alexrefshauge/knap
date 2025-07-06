@@ -23,6 +23,7 @@ export function AtuhenticationProvider({ children }: { children: React.ReactNode
         const sessionCookie = Cookies.get("session");
         if (sessionCookie) {
             setSessionCookie(sessionCookie);
+            setAuthenticated(true);
         }
     }, []);
 

@@ -36,10 +36,12 @@ func CreateSession(db *sql.DB, userId int) (string, time.Time, error) {
 
 func SetSessionCookie(w http.ResponseWriter, token string, expireDate time.Time) {
 	http.SetCookie(w, &http.Cookie{
-		Name:    "session",
-		Value:   token,
-		Expires: expireDate,
-		Path:    "/api",
-		Secure:  false,
+		Name:     "session",
+		Value:    token,
+		Expires:  expireDate,
+		Path:     "/",
+		HttpOnly: false,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
 	})
 }

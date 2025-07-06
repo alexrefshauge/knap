@@ -1,16 +1,15 @@
 meta {
-  name: new user
+  name: auth
   type: http
-  seq: 2
+  seq: 4
 }
 
 post {
-  url: {{address}}/api/user/new
+  url: {{address}}/api/user/auth
   body: multipartForm
   auth: inherit
 }
 
 body:multipart-form {
-  name: alex
   code: 1234
 }

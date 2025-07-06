@@ -1,0 +1,8 @@
+{
+  "name": "knap",
+  "compatibility_date": "2025-07-06",
+  "assets": {
+    "directory": "./web/dist/",
+    "not_found_handling": "404-page"
+  }
+}

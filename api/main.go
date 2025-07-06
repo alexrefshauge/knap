@@ -17,7 +17,7 @@ var (
 
 func main() {
 	var err error
-	if len(os.Args) < 3 {
+	if len(os.Args) < 5 {
 		panic("not enough arguments")
 	}
 
@@ -28,11 +28,13 @@ func main() {
 
 	dbPath = os.Args[2]
 	environment = os.Args[3]
+	certificatePath := os.Args[4]
+	keyPath := os.Args[5]
 	var origins []string
 
 	switch environment {
 	case "dev":
-		origins = []string{"http://localhost:5173"}
+		origins = []string{"http://localhost:5173", "http://192.168.0.134:5173"}
 	case "prod":
 		origins = []string{"*"} //TODO: set correct origin
 	}
@@ -50,7 +52,9 @@ func main() {
 	mux.HandleFunc("POST /api/user/auth", ctx.HandleAuthenticate())
 	mux.HandleFunc("POST /api/user/new", ctx.HandleNewUser())
 
-	err = http.ListenAndServe(fmt.Sprintf(":%d", port), corsMiddleware.Handler(mux))
+	mux.HandleFunc("PUT /api/press", ctx.SessionAuthMiddleware(ctx.HandlePress()))
+
+	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", port), certificatePath, keyPath, corsMiddleware.Handler(mux))
 	if err != nil {
 		panic(err)
 	}

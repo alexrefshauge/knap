@@ -8,7 +8,8 @@ import axios from 'axios'
 import { AtuhenticationProvider } from './hooks/useAuthenticationContext.tsx'
 
 const queryClient = new QueryClient()
-axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api'
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:30420/api'
+axios.defaults.withCredentials = true
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,5 +19,5 @@ createRoot(document.getElementById('root')!).render(
       </AtuhenticationProvider>
       <ReactQueryDevtools client={queryClient} initialIsOpen={true} />
     </QueryClientProvider>
-  </StrictMode>,
+  </StrictMode>
 )
