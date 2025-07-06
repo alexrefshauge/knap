@@ -1,0 +1,27 @@
+meta {
+  name: create cert
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://api.cloudflare.com/client/v4/certificates
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  X-Auth-Email: {{cf_email}}
+  X-Auth-User-Service-Key: {{cf_ca_key}}
+}
+
+body:json {
+  {
+    "hostnames": [
+      "*.drknap.org"
+    ],
+    "request_type": "origin-rsa",
+    "requested_validity": 5475
+  }
+}

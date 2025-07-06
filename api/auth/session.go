@@ -40,6 +40,7 @@ func SetSessionCookie(w http.ResponseWriter, token string, expireDate time.Time)
 		Value:    token,
 		Expires:  expireDate,
 		Path:     "/",
+		Domain:   "drknap.org",
 		HttpOnly: false,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,

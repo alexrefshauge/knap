@@ -62,6 +62,7 @@ func main() {
 
 	mux.HandleFunc("PUT /api/press", ctx.SessionAuthMiddleware(ctx.HandlePress()))
 
+	fmt.Printf("[%s] Listening on port %d\n", environment, port)
 	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", port), certificatePath, keyPath, corsMiddleware.Handler(mux))
 	if err != nil {
 		panic(err)

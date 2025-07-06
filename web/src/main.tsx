@@ -9,7 +9,7 @@ import { AtuhenticationProvider } from './hooks/useAuthenticationContext.tsx'
 
 const queryClient = new QueryClient()
 
-axios.defaults.baseURL = import.meta.env.PROD ? 'https://api.drknap.org/api' : 'https://api.drknap.org/api'
+axios.defaults.baseURL = import.meta.env.PROD ? 'https://api.drknap.org/api' : 'http://localhost:30420/api'
 axios.defaults.withCredentials = true
 
 createRoot(document.getElementById('root')!).render(

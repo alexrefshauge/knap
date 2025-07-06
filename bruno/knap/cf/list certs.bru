@@ -1,0 +1,24 @@
+meta {
+  name: list certs
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://api.cloudflare.com/client/v4/certificates?zone_id={{zone_id}}
+  body: json
+  auth: inherit
+}
+
+params:query {
+  zone_id: {{zone_id}}
+}
+
+headers {
+  X-Auth-Email: {{cf_email}}
+  X-Auth-User-Service-Key: {{cf_ca_key}}
+}
+
+body:json {
+  {}
+}
