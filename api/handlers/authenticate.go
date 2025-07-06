@@ -10,6 +10,24 @@ import (
 
 func (ctx *Context) HandleAuthenticate() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" {
+			c, err := r.Cookie("session")
+			if errors.Is(err, http.ErrNoCookie) {
+				http.Error(w, "No session cookie", http.StatusUnauthorized)
+				return
+			}
+			if err != nil {
+				fmt.Println(err)
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			if valid, _ := auth.AuthenticateSession(ctx.db, c.Value); !valid {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			return
+		}
+
 		code := r.FormValue("code")
 		if code == "" {
 			http.Error(w, "code is required", http.StatusBadRequest)

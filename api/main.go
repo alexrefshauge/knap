@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/alexrefshauge/knap/auth"
 	"github.com/alexrefshauge/knap/handlers"
 	"github.com/rs/cors"
 	"net/http"
@@ -35,6 +36,7 @@ func main() {
 	switch environment {
 	case "dev":
 		origins = []string{"http://localhost:5173"}
+		auth.Origin = "http://localhost:5173"
 	case "prod":
 		origins = []string{"drknap.org"}
 	}
@@ -58,12 +60,17 @@ func main() {
 	mux.HandleFunc("GET /api/health", ctx.HandleHealth())
 
 	mux.HandleFunc("POST /api/user/auth", ctx.HandleAuthenticate())
+	mux.HandleFunc("GET /api/user/auth", ctx.HandleAuthenticate())
 	mux.HandleFunc("POST /api/user/new", ctx.HandleNewUser())
 
 	mux.HandleFunc("PUT /api/press", ctx.SessionAuthMiddleware(ctx.HandlePress()))
 
 	fmt.Printf("[%s] Listening on port %d\n", environment, port)
-	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", port), certificatePath, keyPath, corsMiddleware.Handler(mux))
+	if environment == "dev" {
+		err = http.ListenAndServe(fmt.Sprintf(":%d", port), corsMiddleware.Handler(mux))
+	} else {
+		err = http.ListenAndServeTLS(fmt.Sprintf(":%d", port), certificatePath, keyPath, corsMiddleware.Handler(mux))
+	}
 	if err != nil {
 		panic(err)
 	}

@@ -1,3 +1,4 @@
+import './AuthenticationPage.css'
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { useState } from "react"
@@ -42,26 +43,29 @@ function AuthenticationPage() {
     return (
         <div className="authentication-page">
             <form onSubmit={handleLoginSubmit}>
-
                 <input
                     type="text"
                     name="code"
+                    placeholder='code'
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}
                     value={code} />
 
                 <button>login</button>
             </form>
+            <div className='line' />
             <form onSubmit={handleRegisterSubmit}>
 
                 <input
                     type="text"
                     name="name"
+                    placeholder='name'
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUserName(e.target.value)}
                     value={newUserName} />
 
                 <input
                     type="text"
                     name="code"
+                    placeholder="code"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUserCode(e.target.value)}
                     value={newUserCode} />
 

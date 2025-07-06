@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var Origin = ".drknap.org"
+
 func CreateSession(db *sql.DB, userId int) (string, time.Time, error) {
 	sessionId, err := uuid.NewUUID()
 	if err != nil {
@@ -40,7 +42,7 @@ func SetSessionCookie(w http.ResponseWriter, token string, expireDate time.Time)
 		Value:    token,
 		Expires:  expireDate,
 		Path:     "/",
-		Domain:   ".drknap.org",
+		Domain:   Origin,
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,

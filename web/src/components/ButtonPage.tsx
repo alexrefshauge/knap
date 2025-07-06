@@ -4,20 +4,28 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 
 function ButtonPage() {
-    const [text, setText] = useState("PRESS ME")
+    const [pressed, setPressed] = useState(false)
+    const buttonRef = useRef<HTMLDivElement>(null);
+    const resetButton = () => setTimeout(() => {
+        setPressed(false)
+        setText(":(")
+        buttonRef.current?.classList.remove('pressed')
+    }, 500)
+    const [text, setText] = useState(":)")
     const pressMutation = useMutation({
         mutationFn: () => axios.put('/press'),
         onSuccess: () => {
-            buttonRef.current?.classList.remove('pressed');
+            resetButton()
         },
         onError: (err) => {
-            buttonRef.current?.classList.remove('pressed')
+            resetButton()
             setText(err.message)
         }
     })
-    const buttonRef = useRef<HTMLDivElement>(null);
 
     const handleClick = () => {
+        if (pressed) return
+        setPressed(true)
         buttonRef.current?.classList.add('pressed');
         pressMutation.mutate()
     }

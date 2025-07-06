@@ -6,6 +6,10 @@ import { useAuthenticationContext } from './hooks/useAuthenticationContext'
 function App() {
   const authContext = useAuthenticationContext()
 
+  if (authContext.isLoading) {
+    return <></>
+  }
+
   if (authContext.authenticated) {
     return <ButtonPage />
   } else {

@@ -1,5 +1,5 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Trebuchet MS;
   line-height: 1.5;
   font-weight: 400;
 
@@ -19,4 +19,8 @@
   --c-background:rgb(247, 240, 224);
   --c-background-shadow: rgb(219, 209, 204);
   --c-border:rgb(39, 30, 23);
+}
+
+form > input, button{
+  font-size: 18;
 }

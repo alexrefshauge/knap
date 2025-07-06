@@ -51,6 +51,8 @@
     z-index: -1;
 
     box-shadow: 0px 0px 0px 10px var(--c-background-shadow);
+    -webkit-box-shadow: 0px 0px 0px 10px var(--c-background-shadow);
+    -moz-box-shadow: 0px 0px 0px 10px var(--c-background-shadow);
 }
 
 .button-middle:hover,
@@ -64,7 +66,6 @@
 }
 
 .button-text {
-    font-family: Trebuchet MS;
     font-weight: 800;
     transform: scale(1, 0.8);
     color: var(--c-background);
