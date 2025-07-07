@@ -38,7 +38,7 @@ func main() {
 		origins = []string{"http://localhost:5173"}
 		auth.Origin = "http://localhost:5173"
 	case "prod":
-		origins = []string{"drknap.org"}
+		origins = []string{"https://drknap.org", "https://api.drknap.org"}
 	}
 
 	var allowFunc func(string) bool
