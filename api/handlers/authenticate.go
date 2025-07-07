@@ -54,7 +54,6 @@ func (ctx *Context) HandleAuthenticate() http.HandlerFunc {
 
 func (ctx *Context) SessionAuthMiddleware(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(len(r.Cookies()))
 		c, err := r.Cookie("session")
 		if errors.Is(err, http.ErrNoCookie) {
 			w.WriteHeader(http.StatusUnauthorized)
