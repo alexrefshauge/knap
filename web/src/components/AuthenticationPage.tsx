@@ -8,7 +8,10 @@ function AuthenticationPage() {
     const [code, setCode] = useState("")
     const [newUserName, setNewUserName] = useState("")
     const [newUserCode, setNewUserCode] = useState("")
+	const [loginError, setLoginError] = useState("")
+	const [registerError, setRegisterError] = useState("")
     const authContext = useAuthenticationContext()
+
 
     const loginMutation = useMutation({
         mutationFn: () => axios.post("/user/auth",
@@ -18,6 +21,7 @@ function AuthenticationPage() {
                 withCredentials: true
             }),
         onSuccess: () => { authContext.setAuthenticated(true) },
+	onError: (err) => { err.message }
     })
 
     const registerMutation = useMutation({
@@ -28,6 +32,7 @@ function AuthenticationPage() {
                 withCredentials: true
             }),
         onSuccess: () => { authContext.setAuthenticated(true) },
+	onError: (err) => { setRegisterError(err.message) }
     })
 
     const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,6 +56,7 @@ function AuthenticationPage() {
                     value={code} />
 
                 <button>login</button>
+		{!!loginError && <p>{loginError}</p>}
             </form>
             <div className='line' />
             <form onSubmit={handleRegisterSubmit}>
@@ -70,6 +76,7 @@ function AuthenticationPage() {
                     value={newUserCode} />
 
                 <button>register</button>
+		{!!registerError && <p>{registerError}</p>}
             </form>
         </div>
     )
