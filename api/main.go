@@ -63,8 +63,11 @@ func main() {
 	mux.HandleFunc("GET /api/user/auth", ctx.HandleAuthenticate())
 	mux.HandleFunc("POST /api/user/new", ctx.HandleNewUser())
 
-	mux.HandleFunc("PUT /api/press/add", ctx.SessionAuthMiddleware(ctx.HandlePress()))
-	mux.HandleFunc("DELETE /api/press/undo", ctx.SessionAuthMiddleware(ctx.HandlePressUndo()))
+	mux.HandleFunc("PUT /api/press", ctx.SessionAuthMiddleware(ctx.HandlePress()))
+	mux.HandleFunc("DELETE /api/press", ctx.SessionAuthMiddleware(ctx.HandlePressUndo()))
+
+	mux.HandleFunc("GET /api/press/today", nil)
+	mux.HandleFunc("GET /api/press/week", nil)
 
 	fmt.Printf("[%s] Listening on port %d\n", environment, port)
 	if environment == "dev" {

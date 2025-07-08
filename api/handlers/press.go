@@ -41,6 +41,47 @@ func (ctx *Context) HandlePressUndo() http.HandlerFunc {
 		}
 		
 		var lastId int
-		ctx.db.QueryRow("SELECT id FROM button_pushes WHERE user_id = ? ORDER BY pushed_at DESC LIMIT 1", userId).Scan(&lastId)
+		err := ctx.db.QueryRow("SELECT id FROM button_pushes WHERE user_id = ? ORDER BY pushed_at DESC LIMIT 1", userId).Scan(&lastId)
+		if err != nil {
+			http.Error(w, "Failed to find last button press", http.StatusInternalServerError)	
+			return
+		}
+		_, err = ctx.db.Exec("DELETE FROM button_pushes WHERE id = ?", lastId)
+		if err != nil {
+			http.Error(w, "Failed to find last button press", http.StatusInternalServerError)	
+			return 
+		}
+	}
+}
+
+const dateLayout = "Tue-Jul-08-2025"
+
+func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		dateParam := r.URL.Query().Get("date")
+		if dateParam == "" {
+			http.Error(w, "Missing parameter: date", http.StatusBadRequest)
+			return
+		}
+
+		date, err := time.Parse(dateLayout, dateParam)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Invalid parameter value for date: %s", dateParam), http.StatusBadRequest)
+			return
+		}
+		dateDayStart := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
+		dateDayEnd := dateDayStart.Add(24 * time.Hour)
+
+		var presses []time.Time
+		rows, err := ctx.db.Query("SELECT pushed_at FROM button_pushes WHERE pushed_at > ? AND pushed_at < ?", dateDayStart, dateDayEnd)
+		if err != nil {
+			http.Error(w, "Failed to find button presses", http.StatusInternalServerError)
+		}
+		for rows.Next() {
+			var t time.Time
+			rows.Scan(&t)
+			presses = append(presses, t)
+		}
+		//TODO: parse into response or count selected by query param
 	}
 }
