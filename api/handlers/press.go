@@ -58,9 +58,15 @@ const dateLayout = "Tue-Jul-08-2025"
 
 func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		dateParam := r.URL.Query().Get("date")
+		query := r.URL.Query()
+		dateParam := query.Get("date")
+		countParam := query.Get("count")
 		if dateParam == "" {
 			http.Error(w, "Missing parameter: date", http.StatusBadRequest)
+			return
+		}
+		if countParam == "" {
+			http.Error(w, "Missing parameter: count", http.StatusBadRequest)
 			return
 		}
 
@@ -82,6 +88,7 @@ func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 			rows.Scan(&t)
 			presses = append(presses, t)
 		}
+
 		//TODO: parse into response or count selected by query param
 	}
 }
