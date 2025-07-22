@@ -73,6 +73,7 @@ func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 		date, err := time.Parse(dateLayout, dateParam)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Invalid parameter value for date: %s", dateParam), http.StatusBadRequest)
+			fmt.Println(err.Error())
 			return
 		}
 		dateDayStart := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())

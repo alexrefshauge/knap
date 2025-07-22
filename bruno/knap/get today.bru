@@ -1,0 +1,16 @@
+meta {
+  name: get today
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{address}}/press/today?date=Tue-Jul-22-2025&count=t
+  body: none
+  auth: inherit
+}
+
+params:query {
+  date: Tue-Jul-22-2025
+  count: t
+}
