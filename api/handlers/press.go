@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -54,7 +55,10 @@ func (ctx *Context) HandlePressUndo() http.HandlerFunc {
 	}
 }
 
-const dateLayout = "Tue-Jul-08-2025"
+const dateLayout = "2-1-2006"
+type countResponse struct {
+	Count int `json:"count"`
+}
 
 func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -90,6 +94,22 @@ func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 			presses = append(presses, t)
 		}
 
+		count := len(presses)
+		if countParam == "t" {
+			responseBytes, err := json.Marshal(countResponse{Count: count})
+			if err != nil {
+				http.Error(w, "Failed to format count response", http.StatusInternalServerError)
+				fmt.Println(err.Error())
+				return
+			}
+
+			_, err = w.Write(responseBytes)
+			if err != nil {
+				http.Error(w, "Failed to write respone", http.StatusInternalServerError)
+				return
+			}
+			return
+		}
 		//TODO: parse into response or count selected by query param
 	}
 }
