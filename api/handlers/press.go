@@ -110,6 +110,13 @@ func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 			}
 			return
 		}
-		//TODO: parse into response or count selected by query param
+
+		responseBytes, err := json.Marshal(presses)
+		if err != nil {
+			http.Error(w, "Failed to count presses", http.StatusInternalServerError)
+			return
+		}
+
+		w.Write(responseBytes)
 	}
 }
