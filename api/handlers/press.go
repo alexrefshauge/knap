@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -54,19 +55,29 @@ func (ctx *Context) HandlePressUndo() http.HandlerFunc {
 	}
 }
 
-const dateLayout = "Tue-Jul-08-2025"
+const dateLayout = "2-1-2006"
+type countResponse struct {
+	Count int `json:"count"`
+}
 
 func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		dateParam := r.URL.Query().Get("date")
+		query := r.URL.Query()
+		dateParam := query.Get("date")
+		countParam := query.Get("count")
 		if dateParam == "" {
 			http.Error(w, "Missing parameter: date", http.StatusBadRequest)
+			return
+		}
+		if countParam == "" {
+			http.Error(w, "Missing parameter: count", http.StatusBadRequest)
 			return
 		}
 
 		date, err := time.Parse(dateLayout, dateParam)
 		if err != nil {
 			http.Error(w, fmt.Sprintf("Invalid parameter value for date: %s", dateParam), http.StatusBadRequest)
+			fmt.Println(err.Error())
 			return
 		}
 		dateDayStart := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
@@ -82,6 +93,30 @@ func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 			rows.Scan(&t)
 			presses = append(presses, t)
 		}
-		//TODO: parse into response or count selected by query param
+
+		count := len(presses)
+		if countParam == "t" {
+			responseBytes, err := json.Marshal(countResponse{Count: count})
+			if err != nil {
+				http.Error(w, "Failed to format count response", http.StatusInternalServerError)
+				fmt.Println(err.Error())
+				return
+			}
+
+			_, err = w.Write(responseBytes)
+			if err != nil {
+				http.Error(w, "Failed to write respone", http.StatusInternalServerError)
+				return
+			}
+			return
+		}
+
+		responseBytes, err := json.Marshal(presses)
+		if err != nil {
+			http.Error(w, "Failed to count presses", http.StatusInternalServerError)
+			return
+		}
+
+		w.Write(responseBytes)
 	}
 }

@@ -23,6 +23,10 @@ function ButtonPage() {
         }
     })
 
+	const count = useQuery(["press", "today"], {
+		queryFunc: () => axios.get("/press/today")
+	})
+
     const handleClick = () => {
         if (pressed) return
         setPressed(true)
@@ -39,10 +43,11 @@ function ButtonPage() {
                 <div className='button-middle' onClick={handleClick} ref={buttonRef} />
                 <div className='button-bottom' />
             </div>
-	<div className="menu">
-	<button>undo</button>
-	<button>calender</button>
-	<div>
+	    <div className='press-count'>{countToday}</div>
+		<div className="menu">
+			<button>undo</button>
+			<button>calender</button>
+		<div>
         </div >
     );
 }
