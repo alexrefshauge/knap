@@ -3,12 +3,21 @@ package auth
 import (
 	"database/sql"
 	"errors"
+	"github.com/alexrefshauge/knap/config"
 	"github.com/google/uuid"
 	"net/http"
 	"time"
 )
 
 var Origin = ".drknap.org"
+var SameSiteMode http.SameSite = http.SameSiteNoneMode
+
+func init() {
+	if config.Environment == "dev" {
+		SameSiteMode = http.SameSiteLaxMode
+		Origin = "localhost"
+	}
+}
 
 func CreateSession(db *sql.DB, userId int) (string, time.Time, error) {
 	sessionId, err := uuid.NewUUID()
@@ -43,8 +52,8 @@ func SetSessionCookie(w http.ResponseWriter, token string, expireDate time.Time)
 		Expires:  expireDate,
 		Path:     "/",
 		Domain:   Origin,
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteNoneMode,
+		HttpOnly: config.Environment != "dev",
+		Secure:   config.Environment != "dev",
+		SameSite: SameSiteMode,
 	})
 }

@@ -8,6 +8,17 @@
     width: 400px;
 }
 
+.button-page:parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+
+    height: 400px;
+    width: 400px;
+}
+
+
 
 .button-top {
     background-color: var(--c-red);
@@ -76,5 +87,17 @@
 /*** MENU ***/
 .menu {
     position: absolute;
-    float: bottom;
+    bottom: 0px;
+    margin-bottom: 4rem;
+    gap: 1rem;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.press-count {
+    position: absolute;
+    top: 0px;
+    z-index: 1;
+    margin-top: 4rem;
 }

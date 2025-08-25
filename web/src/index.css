@@ -24,3 +24,16 @@
 form > input, button{
   font-size: 18;
 }
+
+button {
+  border: 0;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.button-base {
+  color: var(--c-border);
+  background: var(--c-background-shadow);
+  cursor: pointer;
+  border-radius: 1rem;
+}

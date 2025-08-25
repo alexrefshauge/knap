@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react';
 import './ButtonPage.css';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import formatDate from '../utils/dateFormat';
 
 function ButtonPage() {
+    const client = useQueryClient()
     const [pressed, setPressed] = useState(false)
     const buttonRef = useRef<HTMLDivElement>(null);
     const resetButton = () => setTimeout(() => {
@@ -16,6 +18,7 @@ function ButtonPage() {
         mutationFn: () => axios.put('/press'),
         onSuccess: () => {
             resetButton()
+            client.invalidateQueries({ queryKey: ["count", "today"] })
         },
         onError: (err) => {
             resetButton()
@@ -23,9 +26,14 @@ function ButtonPage() {
         }
     })
 
-	const count = useQuery(["press", "today"], {
-		queryFunc: () => axios.get("/press/today")
-	})
+    const todayDate = new Date()
+    const countParams = new URLSearchParams([["count", "t"], ["date", formatDate(todayDate)]])
+    const { data: today, isLoading, isError } = useQuery<{ count: number }>({
+        queryKey: ["count", "today"],
+        queryFn: async () => (await axios.get("/press/today", {
+            params: countParams
+        })).data,
+    })
 
     const handleClick = () => {
         if (pressed) return
@@ -33,6 +41,9 @@ function ButtonPage() {
         buttonRef.current?.classList.add('pressed');
         pressMutation.mutate()
     }
+
+    if (isLoading) return <p>loading</p>
+    if (isError) return <p>error</p>
 
     return (
         <div className='button-page' >
@@ -43,11 +54,12 @@ function ButtonPage() {
                 <div className='button-middle' onClick={handleClick} ref={buttonRef} />
                 <div className='button-bottom' />
             </div>
-	    <div className='press-count'>{countToday}</div>
-		<div className="menu">
-			<button>undo</button>
-			<button>calender</button>
-		<div>
+            <div className='press-count'><h1>Count Today: {today?.count}</h1></div>
+            <div className="menu">
+                <button className='button-base'>undo</button>
+                <button className='button-base'>calender</button>
+                <button className='button-base'>logout</button>
+            </div>
         </div >
     );
 }

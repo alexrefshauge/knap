@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/alexrefshauge/knap/config"
+	_ "github.com/alexrefshauge/knap/config"
 	"net/http"
-	"os"
-	"strconv"
 	"time"
 
 	"github.com/alexrefshauge/knap/auth"
@@ -12,40 +12,11 @@ import (
 	"github.com/rs/cors"
 )
 
-var (
-	port        int
-	environment string
-	dbPath      string
-)
-
-const (
-	PORT = iota + 1
-	DB_PATH
-	ENV 
-	CERT_PATH
-	KEY_PATH
-
-)
-
 func main() {
 	var err error
-	fmt.Println(os.Args[ENV])
-	if len(os.Args) < 5 && os.Args[ENV] != "dev" {
-		panic("not enough arguments")
-	}
-
-	port, err = strconv.Atoi(os.Args[PORT])
-	if err != nil {
-		panic(err)
-	}
-
-	dbPath = os.Args[DB_PATH]
-	environment = os.Args[ENV]
-	certificatePath := os.Args[CERT_PATH]
-	keyPath := os.Args[KEY_PATH]
 	var origins []string
 
-	switch environment {
+	switch config.Environment {
 	case "dev":
 		origins = []string{"http://localhost:5173"}
 		auth.Origin = "http://localhost:5173"
@@ -54,7 +25,7 @@ func main() {
 	}
 
 	var allowFunc func(string) bool
-	if environment == "dev" {
+	if config.Environment == "dev" {
 		allowFunc = func(path string) bool {
 			return true
 		}
@@ -66,7 +37,7 @@ func main() {
 		AllowedMethods:   []string{"GET", "POST", "PUT"},
 		AllowCredentials: true,
 	})
-	ctx := handlers.NewContext(dbPath)
+	ctx := handlers.NewContext(config.DbPath)
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /api/health", ctx.HandleHealth())
@@ -81,12 +52,12 @@ func main() {
 	mux.HandleFunc("GET /api/press/today", ctx.SessionAuthMiddleware(ctx.HandlePressGetToday()))
 	//mux.HandleFunc("GET /api/press/week", nil)
 
-	fmt.Printf("[%s] Listening on port %d\n", environment, port)
+	fmt.Printf("[%s] Listening on port %d\n", config.Environment, config.Port)
 	fmt.Println(time.Now().String())
-	if environment == "dev" {
-		err = http.ListenAndServe(fmt.Sprintf(":%d", port), corsMiddleware.Handler(mux))
+	if config.Environment == "dev" {
+		err = http.ListenAndServe(fmt.Sprintf(":%d", config.Port), corsMiddleware.Handler(mux))
 	} else {
-		err = http.ListenAndServeTLS(fmt.Sprintf(":%d", port), certificatePath, keyPath, corsMiddleware.Handler(mux))
+		err = http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Port), config.CertificatePath, config.KeyPath, corsMiddleware.Handler(mux))
 	}
 	if err != nil {
 		panic(err)
