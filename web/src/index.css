@@ -37,3 +37,37 @@ button {
   cursor: pointer;
   border-radius: 1rem;
 }
+
+
+.menu {
+    position: absolute;
+    bottom: 0px;
+    margin-bottom: 4rem;
+    gap: 1rem;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.press-count {
+    position: absolute;
+    top: 0px;
+    z-index: 1;
+    margin-top: 4rem;
+}
+
+@media (min-width:320px)  {
+  .button-base {
+    border-radius: 1rem;
+    font-size: 1rem;
+  }
+
+  .menu {
+    margin-bottom: 1rem;
+  }
+}
+@media (min-width:481px)  { /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */ }
+@media (min-width:641px)  { /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */ }
+@media (min-width:961px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */ }
+@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */ }
+@media (min-width:1281px) { /* hi-res laptops and desktops */ }

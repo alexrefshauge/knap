@@ -4,8 +4,7 @@
     align-items: center;
     justify-content: flex-end;
 
-    height: 400px;
-    width: 400px;
+    height: 200px;
 }
 
 .button-page:parent {
@@ -14,11 +13,7 @@
     align-items: center;
     justify-content: flex-end;
 
-    height: 400px;
-    width: 400px;
 }
-
-
 
 .button-top {
     background-color: var(--c-red);
@@ -61,9 +56,7 @@
     border: 10px solid var(--c-border);
     z-index: -1;
 
-    box-shadow: 0px 0px 0px 10px var(--c-background-shadow);
-    -webkit-box-shadow: 0px 0px 0px 10px var(--c-background-shadow);
-    -moz-box-shadow: 0px 0px 0px 10px var(--c-background-shadow);
+    outline: 10px solid var(--c-background-shadow);
 }
 
 .button-middle:hover,
@@ -82,22 +75,4 @@
     color: var(--c-background);
     font-size: 1.5rem;
     padding-bottom: 1rem;
-}
-
-/*** MENU ***/
-.menu {
-    position: absolute;
-    bottom: 0px;
-    margin-bottom: 4rem;
-    gap: 1rem;
-
-    display: flex;
-    flex-direction: row;
-}
-
-.press-count {
-    position: absolute;
-    top: 0px;
-    z-index: 1;
-    margin-top: 4rem;
 }
