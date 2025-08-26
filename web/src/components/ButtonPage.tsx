@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import formatDate from '../utils/dateFormat';
 
-function ButtonPage() {
+export default function ButtonPage() {
     const client = useQueryClient()
     const [pressed, setPressed] = useState(false)
     const buttonRef = useRef<HTMLDivElement>(null);
@@ -55,13 +55,15 @@ function ButtonPage() {
                 <div className='button-bottom' />
             </div>
             <div className='press-count'><h1>Count Today: {today?.count}</h1></div>
-            <div className="menu">
-                <button className='button-base'>undo</button>
-                <button className='button-base'>calender</button>
-                <button className='button-base'>logout</button>
-            </div>
+            <Menu />
         </div >
     );
 }
 
-export default ButtonPage;
+function Menu() {
+    return (<div className="menu">
+                <button className='button-base'>undo</button>
+                <button className='button-base'>calender</button>
+                <button className='button-base'>logout</button>
+            </div>)
+}
