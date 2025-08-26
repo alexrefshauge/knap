@@ -61,9 +61,21 @@ export default function ButtonPage() {
 }
 
 function Menu() {
+    const onUndo = () => {
+        
+    }
+
+    const onCalendar = () => {
+        
+    }
+
+    const onLogout = () => {
+        document.location.reload()
+    }
+
     return (<div className="menu">
-                <button className='button-base'>undo</button>
-                <button className='button-base'>calender</button>
-                <button className='button-base'>logout</button>
+                <button className='button-base' onClick={onUndo}>undo</button>
+                <button className='button-base' onClick={onCalendar}>calender</button>
+                <button className='button-base' onClick={onLogout}>logout</button>
             </div>)
 }
