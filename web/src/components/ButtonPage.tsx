@@ -55,27 +55,7 @@ export default function ButtonPage() {
                 <div className='button-bottom' />
             </div>
             <div className='press-count'><h1>Count Today: {today?.count}</h1></div>
-            <Menu />
         </div >
     );
 }
 
-function Menu() {
-    const onUndo = () => {
-        
-    }
-
-    const onCalendar = () => {
-        
-    }
-
-    const onLogout = () => {
-        document.location.reload()
-    }
-
-    return (<div className="menu">
-                <button className='button-base' onClick={onUndo}>undo</button>
-                <button className='button-base' onClick={onCalendar}>calender</button>
-                <button className='button-base' onClick={onLogout}>logout</button>
-            </div>)
-}

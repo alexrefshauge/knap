@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/alexrefshauge/knap/model"
 	"net/http"
 	"time"
 )
@@ -40,22 +41,23 @@ func (ctx *Context) HandlePressUndo() http.HandlerFunc {
 			http.Error(w, "Missing user id", http.StatusInternalServerError)
 			return
 		}
-		
+
 		var lastId int
 		err := ctx.db.QueryRow("SELECT id FROM button_pushes WHERE user_id = ? ORDER BY pushed_at DESC LIMIT 1", userId).Scan(&lastId)
 		if err != nil {
-			http.Error(w, "Failed to find last button press", http.StatusInternalServerError)	
+			http.Error(w, "Failed to find last button press", http.StatusInternalServerError)
 			return
 		}
 		_, err = ctx.db.Exec("DELETE FROM button_pushes WHERE id = ?", lastId)
 		if err != nil {
-			http.Error(w, "Failed to find last button press", http.StatusInternalServerError)	
-			return 
+			http.Error(w, "Failed to find last button press", http.StatusInternalServerError)
+			return
 		}
 	}
 }
 
 const dateLayout = "2-1-2006"
+
 type countResponse struct {
 	Count int `json:"count"`
 }
@@ -112,6 +114,45 @@ func (ctx *Context) HandlePressGetToday() http.HandlerFunc {
 		}
 
 		responseBytes, err := json.Marshal(presses)
+		if err != nil {
+			http.Error(w, "Failed to count presses", http.StatusInternalServerError)
+			return
+		}
+
+		w.Write(responseBytes)
+	}
+}
+
+func (ctx *Context) HandlePressGetWeek() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		query := r.URL.Query()
+		dateParam := query.Get("date")
+		if dateParam == "" {
+			http.Error(w, "Missing parameter: date", http.StatusBadRequest)
+			return
+		}
+		date, err := time.Parse(dateLayout, dateParam)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Invalid parameter value for date: %s", dateParam), http.StatusBadRequest)
+			return
+		}
+		weekday := int(date.Weekday() + 1)
+		dateStart := time.Date(date.Year(), date.Month(), date.Day()-weekday, 0, 0, 0, 0, date.Location())
+		dateEnd := dateStart.Add(24 * time.Hour * 7)
+		var presses []time.Time
+		rows, err := ctx.db.Query("SELECT pushed_at FROM button_pushes WHERE pushed_at > ? AND pushed_at < ?", dateStart, dateEnd)
+		if err != nil {
+			http.Error(w, "Failed to find button presses", http.StatusInternalServerError)
+		}
+		for rows.Next() {
+			var t time.Time
+			rows.Scan(&t)
+			presses = append(presses, t)
+		}
+
+		pressesGrouped := model.GroupByWeekday(presses)
+
+		responseBytes, err := json.Marshal(pressesGrouped)
 		if err != nil {
 			http.Error(w, "Failed to count presses", http.StatusInternalServerError)
 			return

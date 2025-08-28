@@ -1,0 +1,15 @@
+meta {
+  name: get week
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{address}}/press/week?date=25-08-2025
+  body: none
+  auth: inherit
+}
+
+params:query {
+  date: 25-08-2025
+}
