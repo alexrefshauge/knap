@@ -1,5 +1,37 @@
 .stats-page{
-    background-color: red;
-    width: 200px;
-    height: 200px;
+    background-color: var(--c-background-shadow);
+    width: 80dvw;
+    height: fit-content;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.weekday-stats {
+    gap: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 4rem;
+    width: 100%;
+}
+.weekday-stats > h2 {
+    background-color: var(--c-border);
+    color: var(--c-background);
+    padding: 0.5rem 0.5rem;
+    border-radius: 8px;
+    height: fit-content;    
+    min-width: 2rem;
+    align-items: center;
+    text-align: center;
+}
+
+.weekday-stats > canvas{
+    border-radius: 8px;
+    height: 100%;
+    width: 100%;
+    background-color: var(--c-background);
 }

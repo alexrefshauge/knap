@@ -42,7 +42,6 @@ button {
 .menu {
     position: absolute;
     bottom: 0px;
-    margin-bottom: 4rem;
     gap: 1rem;
 
     display: flex;
