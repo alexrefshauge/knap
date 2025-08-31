@@ -38,3 +38,11 @@ func AuthenticateSession(db *sql.DB, token string) (bool, int) {
 	}
 	return true, userId
 }
+
+func RevokeUserSessions(db *sql.DB, userId int) {
+	_, err := db.Exec("DELETE FROM sessions WHERE user_id = ?", userId)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}

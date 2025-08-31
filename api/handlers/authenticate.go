@@ -52,10 +52,21 @@ func (ctx *Context) HandleAuthenticate() http.HandlerFunc {
 	}
 }
 
+func (ctx *Context) HandleInvalidate() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		auth.ClearSessionCookie(w)
+		if userId, ok := r.Context().Value("user").(int); ok {
+			auth.RevokeUserSessions(ctx.db, userId)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
 func (ctx *Context) SessionAuthMiddleware(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		c, err := r.Cookie("session")
 		if errors.Is(err, http.ErrNoCookie) {
+			auth.ClearSessionCookie(w)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
@@ -67,6 +78,7 @@ func (ctx *Context) SessionAuthMiddleware(next http.Handler) http.HandlerFunc {
 		var valid bool
 		var userId int
 		if valid, userId = auth.AuthenticateSession(ctx.db, sessionToken); !valid {
+			auth.ClearSessionCookie(w)
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}

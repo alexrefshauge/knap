@@ -57,3 +57,17 @@ func SetSessionCookie(w http.ResponseWriter, token string, expireDate time.Time)
 		SameSite: SameSiteMode,
 	})
 }
+
+func ClearSessionCookie(w http.ResponseWriter) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "session",
+		Value:    "",
+		Expires:  time.Now().Add(-1 * time.Hour),
+		Path:     "/",
+		Domain:   Origin,
+		HttpOnly: config.Environment != "dev",
+		Secure:   config.Environment != "dev",
+		SameSite: SameSiteMode,
+		MaxAge:   0,
+	})
+}

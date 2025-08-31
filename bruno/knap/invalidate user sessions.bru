@@ -1,0 +1,11 @@
+meta {
+  name: invalidate user sessions
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{address}}/user/invalidate
+  body: multipartForm
+  auth: inherit
+}

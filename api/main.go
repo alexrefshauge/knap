@@ -45,6 +45,7 @@ func main() {
 	mux.HandleFunc("POST /api/user/auth", ctx.HandleAuthenticate())
 	mux.HandleFunc("GET /api/user/auth", ctx.HandleAuthenticate())
 	mux.HandleFunc("POST /api/user/new", ctx.HandleNewUser())
+	mux.HandleFunc("DELETE /api/user/invalidate", ctx.SessionAuthMiddleware(ctx.HandleInvalidate()))
 
 	mux.HandleFunc("PUT /api/press", ctx.SessionAuthMiddleware(ctx.HandlePress()))
 	mux.HandleFunc("DELETE /api/press", ctx.SessionAuthMiddleware(ctx.HandlePressUndo()))
